@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyNow</title>
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <div class="container">
+    <h1 id="heading">SkyNow </h1> 
+    <h2 id="heading2">Your Instant Weather Update, Anytime, Anywhere!</h2>
+
+
+    <form action="/submit" method="POST">
+    <input type="text" name="cityname" placeholder="Location Search" name="cityname" required>
+    <input type="submit" value="Submit" class="search-img">
+    </form>
+
+
+    <% if(locals.weatherResult){ %> 
+    <h1 class="forecast-head"><%= weatherResult.name %> Weather Forecast</h1>
+
+    <div class="color-text"> 
+    <div class="format-text"> 
+    
+    <div><img src=<%= icon %> alt="weather icon" class="weatherIcon"></div>
+    <div class="format-date">
+    <h2><%= date %></h2>
+    <% CapitalWeather = (weatherResult.weather[0].description).toUpperCase() %>
+    <h3><%= CapitalWeather %></h3>
+    </div>
+    </div>
+
+    <%function kelvinToCelsius(kelvin) {%>
+        <% return (kelvin - 273.15).toFixed(2); %>
+    <% } %>
+
+    
+    <h1 id="heading-temp"><%= (kelvinToCelsius(weatherResult.main.temp)) %> <sup class="celcius">&deg;</sup>C</h1>
+
+
+    <h2>Weather today in <%= weatherResult.name %></h2>
+    <p>Min Temp | Max Temp</p>
+    <p><%= (kelvinToCelsius(weatherResult.main.temp_min)) %>&deg; | <%= (kelvinToCelsius(weatherResult.main.temp_max)) %>&deg;</p>
+</div>
+
+    <div class="components">
+        <div class="component">
+            <img src="/images/temaparature.png" alt="temparature image" class="images-items"><div><p class="component-name">Temaparature Feels</p><p class="component-value"><%= (kelvinToCelsius(weatherResult.main.feels_like)) %><sup>&deg;</sup>C</p></div>
+        </div>
+        <div class="component">
+            <img src="/images/humidity.png" alt="temparature image" class="images-items"><div><p class="component-name">Humidity</p><p class="component-value"><%= (weatherResult.main.humidity) %>%</p></div>
+        </div>
+        <div class="component">
+            <img src="/images/pressure.png" alt="temparature image" class="images-items"><div><p class="component-name">Pressure</p><p class="component-value"><%= (weatherResult.main.pressure) %>Pa</p></div>
+        </div>
+        <div class="component">
+            <img src="/images/wind.png" alt="temparature image" class="images-items"><div><p class="component-name">Wind-Speed</p><p class="component-value"><%= (weatherResult.wind.speed) %>m/s</p></div>
+        </div>
+
+
+
+        <% function formatedate(notFormatedDate){ %>
+        <% const date = new Date(notFormatedDate*1000); %>
+        <% const options = { hour: '2-digit', minute: '2-digit',  second: '2-digit', timeZone: 'UTC' }; %>
+        <% const TimeUTC = date.toLocaleTimeString('en-US', options); %>
+        <% return TimeUTC;%>
+    <% } %>
+        
+
+    </div>
+        <div class="tables">
+            <table>
+                <caption>Weather data of <%=weatherResult.name %></caption>
+                <tr>
+                    <td class="th-name">Sunrise Time (UTC)</td>
+                    <td class="th-value"><%= formatedate(weatherResult.sys.sunrise) %></td>
+                </tr>
+               
+                <tr>
+                    <td class="th-name">Sunset Time (UTC)</td>
+                    <td class="th-value"><%= formatedate(weatherResult.sys.sunset) %></td>
+                </tr>
+
+                <tr>
+                    <td class="th-name">Wind Degree</td>
+                    <td class="th-value"><%= (weatherResult.wind.deg) %>&deg;</td>
+                </tr>
+
+                <tr>
+                    <td class="th-name">Longitude</td>
+                    <td class="th-value"><%= (weatherResult.coord.lon) %>&deg;</td>
+                </tr>
+
+                <tr>
+                    <td class="th-name">Latitude</td>
+                    <td class="th-value"><%= (weatherResult.coord.lat) %>&deg;</td>
+                </tr>
+            </table>
+        </div>
+
+            <footer>&copy; SkyNow, All rights reserved.</footer>
+            <% } else if(locals.errorMessage && locals.errorMessage2){%>
+                <div class="centerstart">
+                    <p class="starting">
+                        <%= errorMessage %> <br> <%= errorMessage2 %>
+                    </p>
+                </div>
+                <footer>&copy; SkyNow, All rights reserved.</footer>
+                <% } else { %>
+
+                    <div class="centerstart">
+                        <p class="starting">
+                            Type a city name in the search bar and watch the weather unfold!
+                        </p>
+                    </div>
+                    <footer>&copy; SkyNow, All rights reserved.</footer>
+
+                    <% } %>
+    </div>
+
+
+
+</body>
+</html>
