@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 
 const app = express();
 const port = 3000;
-const myAPI = "2a2a9447e88442a1277e65c005f26ce4"
+const myAPI = "your news api key"
 
 
 const now = new Date();
